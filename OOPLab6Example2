@@ -1,0 +1,62 @@
+#include <iostream>
+#include <cmath>
+
+using namespace std;
+
+// Абстрактний базовий клас Фігура
+class Figure {
+public:
+    virtual double volume() = 0; // Віртуальна функція об'єму
+};
+
+// Клас Паралелепіпед
+class Cuboid : public Figure {
+private:
+    double x, y, z; // Сторони паралелепіпеда
+public:
+    Cuboid(double a, double b, double c) : x(a), y(b), z(c) {}
+    double volume() { return x * y * z; } // Обчислення об'єму паралелепіпеда
+};
+
+// Клас Піраміда
+class Pyramid : public Figure {
+private:
+    double x, y, h; // Сторони та висота піраміди
+public:
+    Pyramid(double a, double b, double c) : x(a), y(b), h(c) {}
+    double volume() { return x * y * h / 3; } // Обчислення об'єму піраміди
+};
+
+// Клас Тетраедр
+class Tetrahedron : public Figure {
+private:
+    double a; // Сторона тетраедра
+public:
+    Tetrahedron(double length) : a(length) {}
+    double volume() { return pow(a, 3) * sqrt(2) / 12; } // Обчислення об'єму тетраедра
+};
+
+// Клас Куля
+class Sphere : public Figure {
+private:
+    double r; // Радіус кулі
+public:
+    Sphere(double radius) : r(radius) {}
+    double volume() { return 4 * M_PI * pow(r, 3) / 3; } // Обчислення об'єму кулі
+};
+
+int main() {
+    // Створення об'єктів різних класів та обчислення їх об'ємів
+    Cuboid cuboid(3, 4, 5);
+    Pyramid pyramid(6, 8, 10);
+    Tetrahedron tetrahedron(5);
+    Sphere sphere(2);
+
+    // Виведення результатів обчислень
+    cout << "Об'єм паралелепіпеда: " << cuboid.volume() << endl;
+    cout << "Об'єм піраміди: " << pyramid.volume() << endl;
+    cout << "Об'єм тетраедра: " << tetrahedron.volume() << endl;
+    cout << "Об'єм кулі: " << sphere.volume() << endl;
+
+    return 0;
+}

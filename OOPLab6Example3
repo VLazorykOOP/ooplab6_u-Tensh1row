@@ -1,0 +1,171 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+class Software {
+protected:
+    string name;
+    string version;
+public:
+    Software(string name, string version) : name(name), version(version) {}
+    virtual ~Software() {}
+
+    virtual void printInfo() {
+        cout << "Software: " << name << ", Version: " << version << endl;
+    }
+
+    friend ostream& operator<<(ostream& os, const Software& software) {
+        os << "Name: " << software.name << ", Version: " << software.version;
+        return os;
+    }
+
+    friend istream& operator>>(istream& is, Software& software) {
+        cout << "Enter name: ";
+        is >> software.name;
+        cout << "Enter version: ";
+        is >> software.version;
+        return is;
+    }
+};
+
+// Похідний клас
+class ApplicationSoftware : public Software {
+protected:
+    string developer;
+public:
+    ApplicationSoftware(string name, string version, string developer) : Software(name, version), developer(developer) {}
+
+    void printInfo() {
+        Software::printInfo();
+        cout << "Developer: " << developer << endl;
+    }
+
+    friend ostream& operator<<(ostream& os, const ApplicationSoftware& applicationSoftware) {
+        os << static_cast<const Software&>(applicationSoftware) << ", Developer: " << applicationSoftware.developer;
+        return os;
+    }
+
+    friend istream& operator>>(istream& is, ApplicationSoftware& applicationSoftware) {
+        is >> static_cast<Software&>(applicationSoftware);
+        cout << "Enter developer: ";
+        is >> applicationSoftware.developer;
+        return is;
+    }
+};
+
+// Похідний клас
+class SystemSoftware : public Software {
+protected:
+    string architecture;
+public:
+    SystemSoftware(string name, string version, string architecture) : Software(name, version), architecture(architecture) {}
+
+    void printInfo() {
+        Software::printInfo();
+        cout << "Architecture: " << architecture << endl;
+    }
+
+    friend ostream& operator<<(ostream& os, const SystemSoftware& systemSoftware) {
+        os << static_cast<const Software&>(systemSoftware) << ", Architecture: " << systemSoftware.architecture;
+        return os;
+    }
+
+    friend istream& operator>>(istream& is, SystemSoftware& systemSoftware) {
+        is >> static_cast<Software&>(systemSoftware);
+        cout << "Enter architecture: ";
+        is >> systemSoftware.architecture;
+        return is;
+    }
+};
+
+// Похідний клас
+class OperatingSystem : public ApplicationSoftware, public SystemSoftware {
+public:
+    OperatingSystem(string name, string version, string developer, string architecture) : ApplicationSoftware(name, version, developer), SystemSoftware(name, version, architecture) {}
+
+    void printInfo() {
+        ApplicationSoftware::printInfo();
+        cout << "Architecture: " << architecture << endl;
+    }
+
+    friend ostream& operator<<(ostream& os, const OperatingSystem& operatingSystem) {
+        os << static_cast<const ApplicationSoftware&>(operatingSystem) << ", Architecture: " << operatingSystem.architecture;
+        return os;
+    }
+
+    friend istream& operator>>(istream& is, OperatingSystem& operatingSystem) {
+        is >> static_cast<ApplicationSoftware&>(operatingSystem);
+        cout << "Enter architecture: ";
+        is >> operatingSystem.architecture;
+        return is;
+    }
+};
+
+// Похідний клас
+
+class AntivirusSoftware : public ApplicationSoftware {
+protected:
+    bool realTimeProtection;
+public:
+    AntivirusSoftware(string name, string version, string developer, bool realTimeProtection) : ApplicationSoftware(name, version, developer), realTimeProtection(realTimeProtection) {}
+
+    void setRealTimeProtection(bool protection) {
+        realTimeProtection = protection;
+    }
+
+    bool getRealTimeProtection() const {
+        return realTimeProtection;
+    }
+
+    void printInfo() {
+        ApplicationSoftware::printInfo();
+        cout << "Real-time protection: " << (realTimeProtection ? "Enabled" : "Disabled") << endl;
+    }
+
+    friend ostream& operator<<(ostream& os, const AntivirusSoftware& antivirusSoftware) {
+        os << static_cast<const ApplicationSoftware&>(antivirusSoftware) << ", Real-time protection: " << (antivirusSoftware.realTimeProtection ? "Enabled" : "Disabled");
+        return os;
+    }
+
+    friend istream& operator>>(istream& is, AntivirusSoftware& antivirusSoftware) {
+        is >> static_cast<ApplicationSoftware&>(antivirusSoftware);
+        cout << "Enter real-time protection (1 for enabled, 0 for disabled): ";
+        is >> antivirusSoftware.realTimeProtection;
+        return is;
+    }
+};
+
+int main() {
+    // Створюємо об'єкти класів ініціалізуючи їх поля
+    OperatingSystem os("Windows", "10", "Microsoft", "x64");
+    AntivirusSoftware av("Kaspersky", "2022", "Kaspersky Lab", true);
+
+    // Виводимо інформацію про об'єкти
+    cout << os << endl;
+    cout << av << endl;
+
+    // Модифікуємо поля об'єктів
+    os.setVersion("11");
+    av.setRealTimeProtection(false);
+
+    // Виводимо змінену інформацію про об'єкти
+    cout << os << endl;
+    cout << av << endl;
+
+    // Зчитуємо інформацію про об'єкти з консолі
+    cout << "Enter information for operating system:" << endl;
+    cin >> os;
+
+    cout << "Enter information for antivirus software:" << endl;
+    cin >> av;
+
+    // Виводимо оновлену інформацію про об'єкти
+    cout << os << endl;
+    cout << av << endl;
+
+    return 0;
+}
+
+
+

@@ -121,19 +121,18 @@ public:
     void printInfo() {
         ApplicationSoftware::printInfo();
         cout << "Real-time protection: " << (realTimeProtection ? "Enabled" : "Disabled") << endl;
-    }
-
-    friend ostream& operator<<(ostream& os, const AntivirusSoftware& antivirusSoftware) {
+        friend ostream& operator<<(ostream& os, const AntivirusSoftware& antivirusSoftware);
         os << static_cast<const ApplicationSoftware&>(antivirusSoftware) << ", Real-time protection: " << (antivirusSoftware.realTimeProtection ? "Enabled" : "Disabled");
         return os;
+        
     }
 
-    friend istream& operator>>(istream& is, AntivirusSoftware& antivirusSoftware) {
-        is >> static_cast<ApplicationSoftware&>(antivirusSoftware);
-        cout << "Enter real-time protection (1 for enabled, 0 for disabled): ";
-        is >> antivirusSoftware.realTimeProtection;
-        return is;
-    }
+stream& operator>>(istream& is, AntivirusSoftware& antivirusSoftware) {
+is >> static_cast<ApplicationSoftware&>(antivirusSoftware);
+cout << "Enter real-time protection (1 for enabled, 0 for disabled): ";
+is >> antivirusSoftware.realTimeProtection;
+return is;
+}
 };
 
 int main() {
